@@ -2,7 +2,7 @@
 A federated approach to process and data distribution
 
 ## Abstract
-When a problem overwhelms us we [divide and conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) its complexities to express the solution as work for a computer. When a computer's workload overwhelms its capacity we employ a simmilar set of tools to spread the load across over multiple processes running [concurrently](https://en.wikipedia.org/wiki/Parallel_computing) on multi-core hardware and/or [distributed](https://en.wikipedia.org/wiki/Distributed_computing) several connected computers which the existing faciliteis in both [Distributed Erlang/OTP](https://www.erlang.org/doc/system/distributed.html) and [Distributed Elixir](https://hexdocs.pm/elixir/distributed-tasks.html) assume to be via a fast private (local) network but break down whenever nodes need to connect over public networks and/or high latency links. 
+When a problem overwhelms us we [divide and conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) its complexities to express the solution as work for a computer. When a computer's workload overwhelms its capacity we employ a simmilar set of tools to spread the load across over multiple processes running [concurrently](https://en.wikipedia.org/wiki/Parallel_computing) on multi-core hardware and/or [distributed](https://en.wikipedia.org/wiki/Distributed_computing) several connected computers which the existing facilities in both [Distributed Erlang/OTP](https://www.erlang.org/doc/system/distributed.html) and [Distributed Elixir](https://hexdocs.pm/elixir/distributed-tasks.html) assume to be via a fast private (local) network. Connecting nodes or clusters over public networks and/or high latency links renders the built-in facilities ineffective. 
 
 The FeDist library for Elixir implements a specialised form of process- and data-distribution called Federated Distribution which overcomes LAN dependency, increases tolerance for high network latency and outages and provide the means to spread the workload so that inter-node network traffic is minimised.
 
@@ -64,7 +64,7 @@ flowchart TB
 ### Ideal Parallel Execution
 Alternatively we can arrange to use a separate process to do the processing for each piece. Provided we have sufficient cores and use well-written processes we can ideally expect the work getting done as depicted as below in Figure 3:
 ```mermaid
-flowchart TB
+flowchart LR
     INITIALISE["Divide into n pieces"]
     ACT1["Process piece 1"]
     ACT2["Process piece 2"]
@@ -73,7 +73,7 @@ flowchart TB
     ACT5["Process piece 5"]
     ACT6["Process piece 6"]
     subgraph ETC[" "]
-        direction LR
+        direction TB
         ETC1((" "))
         ETC2((" "))
         ETC3((" "))
@@ -88,7 +88,7 @@ flowchart TB
 ### Realistic Parallel Execution
 In reality, especially when there's way more pieces than cores or threads, the processing of the pieces ends up being spread more or less evenly across the computers, cores and threads (and even processes when we realise that even Erlang/Elixir have limitations as to how many processes it can run). The result, however we choose to allocate pieces to processes might look something like what's depicted here in Figure 4:
 ```mermaid
-flowchart TB
+flowchart LR
     INITIALISE["Divide into n pieces"]
     ACT1["Process piece 1"]
     ACT2["Process piece 2"]
@@ -97,7 +97,7 @@ flowchart TB
     ACT5["Process piece 5"]
     ACT6["Process piece 6"]
     subgraph ETC[" "]
-        direction LR
+        direction TB
         ETC1((" "))
         ETC2((" "))
         ETC3((" "))
@@ -139,4 +139,30 @@ Assuming our objecives include minimising resource usage, but processing a piece
 
 ### Delineation in FeDist
 Normally we'd expect that more advanced delineation would increase the complexity of a distributed system exponentially. However, when there is some clearly identified dominant delineator already front and center in the problem before we've even writing software to solve it, the inverse is true. To use simple delineation in those scenario complicates matters and isolating the delineator as a separate concern which slots into a support library that allows for process and data distribution based governed by that domain specific delineator actually makes writing such systems a great deal simpler, perhaps even trivial.
+
+## Other Libraries
+
+Why a new library when there's already several in what seems to be the same space ranging from several service mesh implementations such as [Linkerd](https://linkerd.io), [Istio](https://istio.io) and even Elixir-specific adaptations such as [Meshx](https://hexdocs.pm/meshx/readme.html)?. Then there's [Partisan](https://github.com/lasp-lang/partisan) and [ProcessHub](https://github.com/alfetahe/process-hub). Someone even suggested that [Riak's Core](https://github.com/basho/riak_core) could help.
+
+The decision to create a new library only came after all attempts to find alignment between the actual problem space and the concepts used in or established by the candidate libraries had revealed the harsh truth that firstly all the libraries tended to increase the overall complexity, secondly no one library solved the entire problem and thirdly using a combination of libraries compounded the additional complexity by making the overlaps in functionality and clashing concepts issues to deal with in the application code. 
+
+## Zyx - Federated Distribution By Example
+
+> "Zyx" is a placeholder name for the actual application that gave rise to and serves as anchor tenant of the FeDist library. Some time after its public launch, the placeholder will be replaced with the actual applications's name. 
+
+Technically Zyc is nothing particularly special. It has some unique features which are separate concerns unaffected by how the data and processing is distributed. Zyx is written in Elixir using the Phoenix Framework with LiveView as critical success factor. 
+
+If the Zyx users were all near enough to a single city or datacenter to provide a good user experience from a cluster of load-balanced nodes in that datacenter it would have been sufficient and simple to arrange. The workload generated by a single user is small enough to facilitate hundreds to thousands of concurrent users on a node. 
+
+The underlying concept in Federated Distribution is to retain as much as possible of that simplicity. If each cluster of nodes ran an independent instance of the application it would be that simple - each having its own set of users with their own data to worry about but that would run contrary to Zyx's objectives. Inspired by its namesakes in administrative and geopolitical system Federated Distribution allows each region to operate independently but provides a structured mechanism to coordinate and exchange data between regions, effectively combining the independent regions under one umbrella. 
+
+It's both impossible and unnecessary to know in advance what proportion of any region's data would only ever be referenced within the region versus the what would be referenced across region boundaries. Impossible because it depends purely on what data users add and how well it is received, but unneccessary because data that is referenced across region boundaries evidently have (more) value to users in other regions so the cost of replicating those records to the regions where they are needed is warranted. What is possible, necessary and important is to make provision for such data to be identified automatically, dynamically replicated as requried without overrunning available resources and of course monitored so that additional resources can be deployed to where it would be most effective.
+
+Also aligned with real-world federation concepts is Federal Distribution's acknowledgement that regions are neither static nor sized equally. Every region grows at its own rate, meaning it's almost certain that no two will be the same size at the same time. As they grow beyond the region's provisioned capacty the users in that region needs additional resources either in the form of more nodes to the cluster or additional clusters. The latter would require that there are datacenters closer to some users in the original region that could host a cluster that's closer to those users. But if access times would be uneffected it would make more sense to grow the number of nodes in the cluster sharing the workload.
+
+### Database IDs
+
+As direct consequence (or enabler, depending on your perspective) of the Federated Distribution approach it emerges as essential that every fragment of "federated" data has something about it that binds it to its home or owner region. Though users are also bound to one region at a time which can change over time there is no room for ambiguity with respect to which region owns which fragment of data. In bona fide distributed databases such as [YugabyteDB](https://www.yugabyte.com) this can lead to incredibly complex configurations especially when it starts involving [remote clusters](https://www.yugabyte.com/blog/tag/xcluster/). FeDist has simplicity as a primary objective and that is best served when the home region of each fragment of data forms part of its key or identifier. For Zyx that means that the 64 bit (bigint) identifier it uses for its main data tables are split into 16 bits for a region id and 48 bits as generated (sequence) identifier unique within the region. Configured like that, any data reference (foreign key) encountered in code can be inspected quickly separated into those available locally and those that needs to come from which other region(s). Which means that the applications's business logic at that point need not distinguish and can deal with all data the same and let the data access layer resolve the local and remote distinction.
+
+
 
