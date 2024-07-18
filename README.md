@@ -166,3 +166,15 @@ As direct consequence (or enabler, depending on your perspective) of the Federat
 
 This identifier, in particular the 16 bits of region identifier it contains is the reference implementation for Zyx's choice of deliniator. The globe being recursively subdivided into smaller and smaller subregions in accordance with where active users are is not something Zyx cam change so adopting a dynamic hierarchy of regions as delineator into the application as its fundamental delineator for data- and process- distribution allows Zyc to match its distributed facilities very accurately to the reality of its ennvironment.
 
+### Region Hierarchy
+
+In case it wasnt' clear above it bears getting highlighted that 16 bits worth of region number is a lot of regions. We also saw that for the application to respond accurately to where and when user nunbers grow we don't want a flat list of non-overlapping regions but rather one global region that keeps subdividing into smaller regions as required resulting in a hierarchical region structure. This structure is going to become critically important when we tackle inter-region communication because if there's one lesson we learnt well from the built-in distribution facilities it is that a full mesh between all nodes doesn't scale well when thousands of nodes are involved.  
+
+### Speratation of Concerns
+
+Given the importance of region identifiers and region hierarchy in the applciation's design it would not appear out of place for the application to implement what it needs for distributed processing and data storage from first principles using low level libraries.
+
+At the other end of the scale the application's designers might choose a powerful high level library which comes with its own approach to process- and data-distribution that the application design has to confirm with if. 
+
+The more beneficial middle ground is to isolate delineation as a separate concern which the application supplies in the form of a defined interface which the library then calls to accurately inform the decisions it makes regarding data- and process-distribution.
+
