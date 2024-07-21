@@ -184,4 +184,100 @@ The particular way we arrange for the FeDist library to adopt how the applicatio
 
 First among the reasons why the built-in provision for distributed processing in Erlang and Elixir (BEAM, to be exact) do not perform well outside of a LAN environment and even with a LAN but with more than a few hundred nodes in a cluster, is the default assumption it makes that all nodes are connected to all the other nodes in what is referred to as a full mesh. For the curious, this has two implications which adds to overheads as the number of nodes and/or the network latency increases. Firstly the resources required for each node to have and service an active network connection (socket) to each other node even if it never gets used. Secondly because the (visible) nodes emit heartbeats which the other nodes all monitor with the purpose of detecting when a node goes offline results in so much traffic and duplicate processing that it leaves neither network nor processing capacity open for actual workload purposes.  And that’s in a LAN environment where the heartbeats can be emitted using broadcast or multicast. Replace the LAN with a WAN and the traffic volumes that now results in effectively single-cast heartbeats very quickly overwhelms the network.
 
+```mermaid
+block-beta
+    columns 4
+    A(("Node 1")):1
+    space:2
+    B(("Node 2")):1
+    A --- B
+    B --"1,2"--- A
+```
+
+```mermaid
+block-beta
+    columns 5
+    space:2
+    A(("Node 1")):1
+    space:2
+    space:5
+    space:5
+    B(("Node 2")):1
+    space:3
+    C(("Node 3")):1
+    A --- B
+    B --- C
+    A --- C
+    B --"1,4"--- A
+    C --"2,5"--- B
+    C --"3,6"--- A
+```
+
+```mermaid
+block-beta
+    columns 4
+    A(("Node 1")):1
+    space:2
+    B(("Node 2")):1
+    space:4
+    space:4
+    C(("Node 3")):1
+    space:2
+    D(("Node 4")):1
+    A --- B
+    A --- C
+    A --- D
+    B --- D
+    C --- D
+    B --- C
+    B --"1,7"--- A
+    C --"2,8"--- A
+    D --"3,9"--- A
+    D --"4,10"--- B
+    D --"5,11"--- C
+    C --"<br><br>6,12"--- B
+
+```
+
+```mermaid
+block-beta
+    columns 11
+    space:5
+    A(("Node 1")):1
+    space:27
+    B(("Node 2")):1
+    space:31
+    C(("Node 3")):1
+    space:45
+    D(("Node 4")):1
+    space:17
+    E(("Node 5")):1
+
+    A---B
+    A---C
+    A---D
+    A---E
+    B--"1,5"---A
+    B---C
+    B---D
+    B---E
+    C--"2,9"---A
+    C--"6,10"---B
+    C---D
+    C---E
+    D--"3,13"---A
+    D--"7,14"---B
+    D--"11,15"---C
+    D---E
+    E--"4,17"---A
+    E--"8,18"---B
+    E--"12,19"---C
+    E--"16,20"---D
+
+
+```
+
+
+Despite the 
+
 By implication we need to avoid full mesh networking, but on a functional level each region must still be able to notify or fetch data from any other region.  So what we wish to achieve is to let the application call upon whatever region the data they’re loading points to and let the FeDist middleware determine how best to actually interconnect nodes either directly or via relay nodes to ensure the fastest turn-around times possible. 
