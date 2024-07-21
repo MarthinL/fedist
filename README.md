@@ -197,7 +197,7 @@ block-beta
     Ba --"1,2"--- Aa
 
     Ha1["2 Nodes:"]
-    Ha2["2<sup>2</sup> - 2"]
+    Ha2["(2 * 2) - 2"]
     Ha3["= 2 links"]
     space:8
     style Ha1 stroke:none
@@ -220,7 +220,7 @@ block-beta
     Cb --"3,6"--- Ab
 
     Hb1["3 Nodes:"]
-    Hb2["3<sup>2</sup>-3"]
+    Hb2["(3 * 3) - 3"]
     Hb3["= 6 links"]
     space:8
     style Hb1 stroke:none
@@ -249,7 +249,7 @@ block-beta
     Cc --"<br><br>6,12"--- Bc
 
     Hc1["4 Nodes:"]
-    Hc2["4<sup>2</sup>-4"]
+    Hc2["(4 * 4) - 4"]
     Hc3["= 12 links"]
     space:8
     style Hc1 stroke:none
@@ -291,7 +291,7 @@ block-beta
     Ed--"16,20"---Dd
 
     Hd1["5 Nodes:"]
-    Hd2["5<sup>2</sup>-5"]
+    Hd2["(5 * 5) - 5"]
     Hd3["= 20 links"]
     space:8
     style Hd1 stroke:none
@@ -299,7 +299,7 @@ block-beta
     style Hd3 stroke:none
 ```
 ---
-#### Figure 5: n Nodes requires n<sup>2</sup>-n links
+#### Figure 5: n Nodes requires (n * n)-n links
 
 
 
