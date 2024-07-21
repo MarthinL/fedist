@@ -184,105 +184,126 @@ The particular way we arrange for the FeDist library to adopt how the applicatio
 
 First among the reasons why the built-in provision for distributed processing in Erlang and Elixir (BEAM, to be exact) do not perform well outside of a LAN environment and even with a LAN but with more than a few hundred nodes in a cluster, is the default assumption it makes that all nodes are connected to all the other nodes in what is referred to as a full mesh. For the curious, this has two implications which adds to overheads as the number of nodes and/or the network latency increases. Firstly the resources required for each node to have and service an active network connection (socket) to each other node even if it never gets used. Secondly because the (visible) nodes emit heartbeats which the other nodes all monitor with the purpose of detecting when a node goes offline results in so much traffic and duplicate processing that it leaves neither network nor processing capacity open for actual workload purposes.  And that’s in a LAN environment where the heartbeats can be emitted using broadcast or multicast. Replace the LAN with a WAN and the traffic volumes that now results in effectively single-cast heartbeats very quickly overwhelms the network.
 
+
+
 ```mermaid
 block-beta
     columns 11
-    A(("Node 1")):1
+
+    Aa(("Node 1")):1
     space:9
-    B(("Node 2")):1
-    A --- B
-    B --"1,2"--- A
-```
-#### Figure 5a: 2 Nodes (2<sup>2</sup>-2)=2 mesh links
----
-```mermaid
-block-beta
-    columns 11
+    Ba(("Node 2")):1
+    Aa --- Ba
+    Ba --"1,2"--- Aa
+
+    Ha1["2 Nodes:"]
+    Ha2["2<sup>2</sup> - 2"]
+    Ha3["= 2 links"]
+    space:8
+    style Ha1 stroke:none
+    style Ha2 stroke:none
+    style Ha3 stroke:none
+    space:11
+
     space:5
-    A(("Node 1")):1
+    Ab(("Node 1")):1
     space:5
     space:44
-    B(("Node 2")):1
+    Bb(("Node 2")):1
     space:9
-    C(("Node 3")):1
-    A --- B
-    B --- C
-    A --- C
-    B --"1,4"--- A
-    C --"2,5"--- B
-    C --"3,6"--- A
-```
-#### Figure 5b: 3 Nodes (3<sup>2</sup>-3)=6 mesh links
+    Cb(("Node 3")):1
+    Ab --- Bb
+    Bb --- Cb
+    Ab --- Cb
+    Bb --"1,4"--- Ab
+    Cb --"2,5"--- Bb
+    Cb --"3,6"--- Ab
 
----
-```mermaid
-block-beta
-    columns 11
-    A(("Node 1")):1
+    Hb1["3 Nodes:"]
+    Hb2["3<sup>2</sup>-3"]
+    Hb3["= 6 links"]
+    space:8
+    style Hb1 stroke:none
+    style Hb2 stroke:none
+    style Hb3 stroke:none
+    space:11
+
+    Ac(("Node 1")):1
     space:9
-    B(("Node 2")):1
+    Bc(("Node 2")):1
     space:99
-    C(("Node 3")):1
+    Cc(("Node 3")):1
     space:9
-    D(("Node 4")):1
-    A --- B
-    A --- C
-    A --- D
-    B --- D
-    C --- D
-    B --- C
-    B --"1,7"--- A
-    C --"2,8"--- A
-    D --"3,9"--- A
-    D --"4,10"--- B
-    D --"5,11"--- C
-    C --"<br><br>6,12"--- B
+    Dc(("Node 4")):1
+    Ac --- Bc
+    Ac --- Cc
+    Ac --- Dc
+    Bc --- Dc
+    Cc --- Dc
+    Bc --- Cc
+    Bc --"1,7"--- Ac
+    Cc --"2,8"--- Ac
+    Dc --"3,9"--- Ac
+    Dc --"4,10"--- Bc
+    Dc --"5,11"--- Cc
+    Cc --"<br><br>6,12"--- Bc
 
-```
-#### Figure 5c: 4 Nodes (4<sup>2</sup>-4)=12 mesh links
----
+    Hc1["4 Nodes:"]
+    Hc2["4<sup>2</sup>-4"]
+    Hc3["= 12 links"]
+    space:8
+    style Hc1 stroke:none
+    style Hc2 stroke:none
+    style Hc3 stroke:none
+    space:11
 
-```mermaid
-block-beta
-    columns 11
     space:5
-    A(("Node 1")):1
+    Ad(("Node 1")):1
     space:27
-    B(("Node 2")):1
+    Bd(("Node 2")):1
     space:31
-    C(("Node 3")):1
+    Cd(("Node 3")):1
     space:45
-    D(("Node 4")):1
+    Dd(("Node 4")):1
     space:17
-    E(("Node 5")):1
+    Ed(("Node 5")):1
+    space:2
 
-    A---B
-    A---C
-    A---D
-    A---E
-    B--"1,5"---A
-    B---C
-    B---D
-    B---E
-    C--"2,9"---A
-    C--"6,10"---B
-    C---D
-    C---E
-    D--"3,13"---A
-    D--"7,14"---B
-    D--"11,15"---C
-    D---E
-    E--"4,17"---A
-    E--"8,18"---B
-    E--"12,19"---C
-    E--"16,20"---D
+    Ad---Bd
+    Ad---Cd
+    Ad---Dd
+    Ad---Ed
+    Bd--"1,5"---Ad
+    Bd---Cd
+    Bd---Dd
+    Bd---Ed
+    Cd--"2,9"---Ad
+    Cd--"6,10"---Bd
+    Cd---Dd
+    Cd---Ed
+    Dd--"3,13"---Ad
+    Dd--"7,14"---Bd
+    Dd--"11,15"---Cd
+    Dd---Ed
+    Ed--"4,17"---Ad
+    Ed--"8,18"---Bd
+    Ed--"12,19"---Cd
+    Ed--"16,20"---Dd
 
-
+    Hd1["5 Nodes:"]
+    Hd2["5<sup>2</sup>-5"]
+    Hd3["= 20 links"]
+    space:8
+    style Hd1 stroke:none
+    style Hd2 stroke:none
+    style Hd3 stroke:none
 ```
-#### Figure 5d: 5 Nodes (5<sup>2</sup>-5)=20 mesh links
 ---
+#### Figure 5: n Nodes requires n<sup>2</sup>-n links
+
 
 
 Despite the 
 
 By implication we need to avoid full mesh networking, but on a functional level each region must still be able to notify or fetch data from any other region.  So what we wish to achieve is to let the application call upon whatever region the data they’re loading points to and let the FeDist middleware determine how best to actually interconnect nodes either directly or via relay nodes to ensure the fastest turn-around times possible. 
+
