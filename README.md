@@ -186,24 +186,24 @@ First among the reasons why the built-in provision for distributed processing in
 
 ```mermaid
 block-beta
-    columns 4
+    columns 11
     A(("Node 1")):1
-    space:2
+    space:9
     B(("Node 2")):1
     A --- B
     B --"1,2"--- A
 ```
+#### Figure 5a: 2 Node Mesh - (2<sup>2</sup> - 2) = 2 links
 
 ```mermaid
 block-beta
-    columns 5
-    space:2
+    columns 11
+    space:5
     A(("Node 1")):1
-    space:2
     space:5
-    space:5
+    space:44
     B(("Node 2")):1
-    space:3
+    space:9
     C(("Node 3")):1
     A --- B
     B --- C
@@ -212,17 +212,17 @@ block-beta
     C --"2,5"--- B
     C --"3,6"--- A
 ```
+#### Figure 5b: 3 Node Mesh - (3<sup>2</sup> - 3) = 6 links
 
 ```mermaid
 block-beta
-    columns 4
+    columns 11
     A(("Node 1")):1
-    space:2
+    space:9
     B(("Node 2")):1
-    space:4
-    space:4
+    space:99
     C(("Node 3")):1
-    space:2
+    space:9
     D(("Node 4")):1
     A --- B
     A --- C
@@ -238,6 +238,7 @@ block-beta
     C --"<br><br>6,12"--- B
 
 ```
+#### Figure 5c: 4 Node Mesh - (4<sup>2</sup> - 4) = 12 links
 
 ```mermaid
 block-beta
@@ -276,6 +277,7 @@ block-beta
 
 
 ```
+#### Figure 5d: 5 Node Mesh - (5<sup>2</sup> - 5) = 20 links
 
 
 Despite the 
