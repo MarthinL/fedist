@@ -194,7 +194,7 @@ block-beta
     B --"1,2"--- A
 ```
 #### Figure 5a: 2 Node Mesh - (2<sup>2</sup> - 2) = 2 links
-
+---
 ```mermaid
 block-beta
     columns 11
@@ -214,6 +214,7 @@ block-beta
 ```
 #### Figure 5b: 3 Node Mesh - (3<sup>2</sup> - 3) = 6 links
 
+---
 ```mermaid
 block-beta
     columns 11
@@ -239,6 +240,7 @@ block-beta
 
 ```
 #### Figure 5c: 4 Node Mesh - (4<sup>2</sup> - 4) = 12 links
+---
 
 ```mermaid
 block-beta
@@ -278,6 +280,7 @@ block-beta
 
 ```
 #### Figure 5d: 5 Node Mesh - (5<sup>2</sup> - 5) = 20 links
+---
 
 
 Despite the 
