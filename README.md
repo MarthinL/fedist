@@ -193,7 +193,7 @@ block-beta
     A --- B
     B --"1,2"--- A
 ```
-#### Figure 5a: 2 Node Mesh - (2<sup>2</sup> - 2) = 2 links
+#### Figure 5a: 2 Nodes (2<sup>2</sup>-2)=2 mesh links
 ---
 ```mermaid
 block-beta
@@ -212,7 +212,7 @@ block-beta
     C --"2,5"--- B
     C --"3,6"--- A
 ```
-#### Figure 5b: 3 Node Mesh - (3<sup>2</sup> - 3) = 6 links
+#### Figure 5b: 3 Nodes (3<sup>2</sup>-3)=6 mesh links
 
 ---
 ```mermaid
@@ -239,7 +239,7 @@ block-beta
     C --"<br><br>6,12"--- B
 
 ```
-#### Figure 5c: 4 Node Mesh - (4<sup>2</sup> - 4) = 12 links
+#### Figure 5c: 4 Nodes (4<sup>2</sup>-4)=12 mesh links
 ---
 
 ```mermaid
@@ -279,7 +279,7 @@ block-beta
 
 
 ```
-#### Figure 5d: 5 Node Mesh - (5<sup>2</sup> - 5) = 20 links
+#### Figure 5d: 5 Nodes (5<sup>2</sup>-5)=20 mesh links
 ---
 
 
