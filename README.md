@@ -160,6 +160,19 @@ Why a new library when there's already several in what seems to be the same spac
 
 The decision to create a new library only came after all attempts to find alignment between the actual problem space and the concepts used in or established by the candidate libraries had revealed the harsh truth that firstly all the libraries tended to increase the overall complexity, secondly no one library solved the entire problem and thirdly using a combination of libraries compounded the additional complexity by making the overlaps in functionality and clashing concepts issues to deal with in the application code. 
 
+## Clustering
+
+It's come to my attention that in the course of explaining the mechanics of Federated Distribution I've made an unjustified assumption about what most developers using Elixir/Phoenix with LiveView would consider common knowledge and/or standard practice for them. The natural and default run-time environment for a Phoenix application is a single instance of the BEAM. For development purposes this is usually on their local machines and when it goes to production it gets deployed to an Elixir-friendly hosting environment like Fly.io or to a dedicated docker environment on a cloud hosted virtual machine or a shared docker environment offered by a public cloud provider. The environment the application gets deployed to might be running on a cluster of computers at the cloud provider's discression but the application itself isn't clustered and doesn't share its load across multiple instances of the BEAM.
+
+But that's OK. BEAM, Erlang, Elixir and Phoenix are all great at using multi-cores for serving multiple concurrent users even when maintaining a LiveView state (session) for each. Running more than one BEAM VM on the same physical processor involves overheads which might be OK if it's for development and testing purposes. 
+
+Arranging for a Phoenix application to run in an actual cluster of separate servers with load-balancing isn't all that hard when using Kubernetes, but it does involve going above and beyond the deployment options described in the Phoenix documentation. 
+
+The good news though is that for FeDist purposes we do not need to worry or even know about which regional clusters are actual clusters and which are simply a standard deployment of the app on a single BEAM. 
+
+FeDist's federated distribution is a specialised form of distributed computing aimed at either avoiding or encapsulating the bulk of the difficulties associated with the generalised form when used to solve a problem which already dictates how the processing and/or the data is naturally distributed already. By contrast clustering is a separate concern focussing on parallelism across the processors of several servers (using another  simplification of the original distriuted computing concept) to offer higher capacities and fault tolerance than can be achieved with a single server.
+
+In short, whether an application requires single-node, multi-node clusters or a combination of the two does not impact whether or how it would engage federated distribution.
 
 ## Yacawad - Federated Distribution By Example
 
